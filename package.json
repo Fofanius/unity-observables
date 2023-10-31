@@ -1,7 +1,12 @@
 {
     "name": "com.fofanius.observables",
-    "displayName": "Collection of different observables types :)",
-    "version": "1.0.0",
+    "displayName": "Fofanius - Observables",
+    "description": "The 'Observables' package provides additional types designed to effectively implement and use 'Observer' pattern.",
+    "version": "1.0.1",
     "unity": "2020.3",
-    "unityRelease": "0f1"
+    "unityRelease": "0f1",
+    "repository": {
+        "url": "https://github.com/Fofanius/unity-observables.git",
+        "type": "git"
+    }
 }

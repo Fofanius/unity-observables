@@ -1,5 +1,5 @@
 {
-    "name": "Tests",
+    "name": "com.fofanius.observable.tests",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Fofanius.Observables.ObservableValue;
 using NUnit.Framework;
+using UnityEngine;
 
 public class ObservableValueTests
 {
@@ -28,12 +29,12 @@ public class ObservableValueTests
         observableInt.Value = nextValue;
         Assert.AreEqual(nextValue, observableInt.Value, "Value wasn't updated!");
     }
-    
+
     [Test]
     public void Test_ValueSet_Class()
     {
         var observable = new ObservableValue<TestClassForReferenceComparing>();
-        Assert.AreEqual(default, observable.Value , "Wrong value assigned in constructor!");
+        Assert.AreEqual(default, observable.Value, "Wrong value assigned in constructor!");
 
         var first = new TestClassForReferenceComparing();
 
@@ -42,7 +43,7 @@ public class ObservableValueTests
 
         var second = new TestClassForReferenceComparing();
         observable.Value = second;
-        
+
         Assert.AreEqual(second, observable.Value, "Value wasn't updated to new instance!");
 
         observable.Value = default;
@@ -54,7 +55,7 @@ public class ObservableValueTests
     {
         Test_ChangedEventRaised(1, 2);
     }
-    
+
     [Test]
     public void Test_ChangeEventRaised_Class()
     {
@@ -76,9 +77,26 @@ public class ObservableValueTests
         Assert.AreEqual(b, receiver[1].Current);
     }
 
-    private class TestClassForReferenceComparing
+    [Test]
+    public void Test_ObservableValueNewtonsoftSerialization_StringValue()
     {
-        
+        Test_ObservableValueNewtonsoftSerialization("Hello, Newtonsoft!");
     }
-    
+
+    [Test]
+    public void Test_ObservableValueNewtonsoftSerialization_Float()
+    {
+        Test_ObservableValueNewtonsoftSerialization(Mathf.PI);
+    }
+
+    private void Test_ObservableValueNewtonsoftSerialization<T>(T valueToTest)
+    {
+        var observableOrigin = new ObservableValue<T>(valueToTest);
+        var json = Newtonsoft.Json.JsonConvert.SerializeObject(observableOrigin);
+        var observableDeserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<ObservableValue<T>>(json);
+
+        Assert.AreEqual(observableOrigin.Value, observableDeserialized.Value, $"Serialization progress failed! '{observableDeserialized.Value}' is not equal to '{observableOrigin.Value}'!");
+    }
+
+    private class TestClassForReferenceComparing { }
 }

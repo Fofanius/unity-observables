@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Fofanius.Observables.ObservableValue
@@ -9,15 +10,20 @@ namespace Fofanius.Observables.ObservableValue
     {
         public event ObservableChangedEventHandler<ObservableValueChangeEventArg<T>> Changed;
 
-        [SerializeField] private T _value;
+        [SerializeField, JsonProperty(nameof(Value))]
+        private T _value;
 
+        [JsonIgnore]
         public T Value
         {
             get => _value;
             set => SetValue(value);
         }
 
-        public ObservableValue(T value = default)
+        [JsonConstructor]
+        public ObservableValue() { }
+
+        public ObservableValue(T value)
         {
             _value = value;
         }

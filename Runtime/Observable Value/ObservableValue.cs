@@ -11,7 +11,7 @@ namespace Fofanius.Observables.ObservableValue
         public event ObservableChangedEventHandler<ObservableValueChangeEventArg<T>> Changed;
 
         [SerializeField, JsonProperty(nameof(Value))]
-        private T _value;
+        protected internal T _value;
 
         [JsonIgnore]
         public T Value
@@ -21,23 +21,25 @@ namespace Fofanius.Observables.ObservableValue
         }
 
         [JsonConstructor]
-        public ObservableValue() { }
+        protected internal ObservableValue() { }
 
         public ObservableValue(T value)
         {
             _value = value;
         }
 
-        public void SetValue(T value)
+        protected internal virtual bool Equals(T a, T b) => EqualityComparer<T>.Default.Equals(a, b);
+
+        public virtual void SetValue(T value)
         {
-            if (EqualityComparer<T>.Default.Equals(_value, value)) return;
+            if (Equals(_value, value)) return;
 
             var previous = _value;
             SetValueWithoutNotify(value);
             RiseValueChangedInternal(value, previous);
         }
 
-        public void SetValueWithoutNotify(T value)
+        public virtual void SetValueWithoutNotify(T value)
         {
             _value = value;
         }

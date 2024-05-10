@@ -15,5 +15,10 @@ namespace Fofanius.Observables.ObservableValue
         }
 
         public override string ToString() => $"Change: {Current?.ToString() ?? "NULL"} (was {Previous?.ToString() ?? "NULL"})";
+
+        public static explicit operator T(ObservableValueChangeEventArg<T> eventArg)
+        {
+            return eventArg.Current;
+        }
     }
 }

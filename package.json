@@ -2,7 +2,7 @@
     "name": "com.fofanius.observables",
     "displayName": "Fofanius - Observables",
     "description": "The 'Observables' package provides additional types designed to effectively implement and use 'Observer' pattern.",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "unity": "2020.3",
     "unityRelease": "0f1",
     "repository": {

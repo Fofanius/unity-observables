@@ -33,7 +33,7 @@ public class ObservableValueTests
     [Test]
     public void Test_ValueSet_Class()
     {
-        var observable = new ObservableValue<TestClassForReferenceComparing>();
+        var observable = new ObservableValue<TestClassForReferenceComparing>(default);
         Assert.AreEqual(default, observable.Value, "Wrong value assigned in constructor!");
 
         var first = new TestClassForReferenceComparing();
@@ -62,10 +62,41 @@ public class ObservableValueTests
         Test_ChangedEventRaised("first", "second");
     }
 
+    [Test]
+    public void Test_RangedValue_Basic()
+    {
+        const float a = -5f;
+        const float b = 5f;
+        var observable = new RangedObservableValue<float>(1, a, b);
+
+        observable.Value = 3;
+        Assert.AreEqual(3, observable.Value);
+
+        observable.Value = a - 1;
+        Assert.AreEqual(a, observable.Value);
+
+        observable.Value = b + 1;
+        Assert.AreEqual(b, observable.Value);
+
+        observable.MaxValue = b * 2;
+        observable.Value = b + 1;
+        Assert.AreEqual(b + 1, observable.Value);
+
+        observable.MaxValue = 0;
+        Assert.AreEqual(0, observable.Value);
+
+        observable.MinValue = a * 2;
+        observable.Value = a - 1;
+        Assert.AreEqual(a - 1, observable.Value);
+
+        observable.MinValue = a;
+        Assert.AreEqual(a, observable.Value);
+    }
+
     private static void Test_ChangedEventRaised<T>(T a, T b)
     {
         var receiver = new List<ObservableValueChangeEventArg<T>>();
-        var observable = new ObservableValue<T>();
+        var observable = new ObservableValue<T>(default);
 
         observable.Changed += delegate(ObservableValueChangeEventArg<T> arg) { receiver.Add(arg); };
 

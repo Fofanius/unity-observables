@@ -13,15 +13,15 @@ namespace Fofanius.Observables.ObservableValue
         [SerializeField, JsonProperty(nameof(MinValue))] private T _minValue;
         [SerializeField, JsonProperty(nameof(MaxValue))] private T _maxValue;
 
-        public T MinValue
+        [JsonIgnore] public T MinValue
         {
             get => _minValue;
             set => SetMinValue(value);
         }
 
-        public T MaxValue
+        [JsonIgnore] public T MaxValue
         {
-            get => _minValue;
+            get => _maxValue;
             set => SetMaxValue(value);
         }
 
@@ -30,7 +30,10 @@ namespace Fofanius.Observables.ObservableValue
 
         public RangedObservableValue(T value, T minValue, T maxValue)
         {
-            if (minValue.CompareTo(maxValue) >= 0) throw new ArgumentException($"Min value ({minValue}) is equal or greater then Max value ({maxValue})!");
+            if (minValue is not null && maxValue is not null && minValue.CompareTo(maxValue) >= 0)
+            {
+                throw new ArgumentException($"Min value ({minValue}) is equal or greater then Max value ({maxValue})!");
+            }
 
             _minValue = minValue;
             _maxValue = maxValue;
@@ -60,7 +63,7 @@ namespace Fofanius.Observables.ObservableValue
             _minValue = minValue;
             MinValueChanged?.Invoke(new ObservableValueChangeEventArg<T>(_minValue, previousValue));
 
-            if (_value.CompareTo(_minValue) < 0)
+            if (_minValue is not null && _value.CompareTo(_minValue) < 0)
             {
                 SetValue(_minValue);
             }
@@ -76,7 +79,7 @@ namespace Fofanius.Observables.ObservableValue
             _maxValue = maxValue;
             MaxValueChanged?.Invoke(new ObservableValueChangeEventArg<T>(_maxValue, previousValue));
 
-            if (_value.CompareTo(_maxValue) > 0)
+            if (_maxValue is not null && _value.CompareTo(_maxValue) > 0)
             {
                 SetValue(_maxValue);
             }
@@ -92,14 +95,16 @@ namespace Fofanius.Observables.ObservableValue
 
         public T ClampMin(T value)
         {
-            if (value.CompareTo(_minValue) < 0) return _minValue;
+            if (_minValue is not null && value.CompareTo(_minValue) < 0) return _minValue;
             return value;
         }
 
         public T ClampMax(T value)
         {
-            if (value.CompareTo(_maxValue) > 0) return _maxValue;
+            if (_maxValue is not null && value.CompareTo(_maxValue) > 0) return _maxValue;
             return value;
         }
+
+        public override string ToString() => $"Ranged Observable: {(_value?.ToString() ?? "NULL")} [{(_minValue?.ToString() ?? "NULL")}, {(_maxValue?.ToString() ?? "NULL")}]";
     }
 }

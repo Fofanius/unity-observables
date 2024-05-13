@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Fofanius.Observables.ObservableValue;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -91,6 +92,21 @@ public class ObservableValueTests
 
         observable.MinValue = a;
         Assert.AreEqual(a, observable.Value);
+    }
+
+    [Test]
+    public void Test_RangedValue_Serialization_Float()
+    {
+        const float a = -5f;
+        const float b = 5f;
+        var observable = new RangedObservableValue<float>(1, a, b);
+
+        var json = JsonConvert.SerializeObject(observable);
+        var instance = JsonConvert.DeserializeObject<RangedObservableValue<float>>(json);
+
+        Assert.AreEqual(observable.Value, instance.Value);
+        Assert.AreEqual(observable.MinValue, instance.MinValue);
+        Assert.AreEqual(observable.MaxValue, instance.MaxValue);
     }
 
     private static void Test_ChangedEventRaised<T>(T a, T b)
